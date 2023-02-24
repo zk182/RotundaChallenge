@@ -1,0 +1,24 @@
+{
+  "name": "rotundachallenge",
+  "version": "1.0.0",
+  "description": "zoo_exercise -> zoo.js",
+  "main": "alarm.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node alarm.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zk182/RotundaChallenge.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zk182/RotundaChallenge/issues"
+  },
+  "homepage": "https://github.com/zk182/RotundaChallenge#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "read-last-lines": "^1.8.0"
+  }
+}
