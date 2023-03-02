@@ -24,20 +24,19 @@ app.post('/error', async (req, res) => {
 
 
 async function logError(error) {
-    const now = new Date();
-    fs.appendFile("/tmp/test", `${error.someproperty},${now}${os.EOL}`, function(err) {
+    fs.appendFile("/tmp/test", `${error.someproperty},${new Date()}${os.EOL}`, function(err) {
         if (!err) console.log("The error was saved!");
     }); 
 }
 
 async function checkErrors() {
-    const errors = await readLastLines.read('/tmp/test', 10).then((lines) => lines.split('\n')); // we just read last ten items
+    const errors = await readLastLines.read('/tmp/test', 10).then((lines) => lines.split('\n')); // we just read only last ten items, not the whole file
     if (errors.length == maxPossibleErrors + 1) { // we have ten items + one empty line
         const first = new Date(errors[0]);
         const last = new Date(errors[9]);
         const seconds = Math.abs(first.getTime() - last.getTime()) / 1000;
         console.log(`difference in seconds is ${seconds}, ${first.getTime()}, ${last.getTime()}`);
-        if (seconds <= 60) {
+        if (seconds <= 60) { // the ten error items must have passed in the last minute
           resetNotifier();
           console.log('email sent!');
         }
