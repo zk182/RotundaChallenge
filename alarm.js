@@ -6,36 +6,45 @@ const readLastLines = require('read-last-lines');
 const app = express()
 const port = 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-})
-
-app.post('/error', async (req, res) => {
-  await logError({ someproperty: 'error property'});
-  await checkErrors();
-  res.send('Error logged');  
-})
+const maxPossibleErrors = 10
+let shouldNotify = true;
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 })
 
+app.post('/error', async (req, res) => {
+  await logError({ someproperty: 'error property'});
+  console.log('should notify is', shouldNotify);
+  if (shouldNotify) { 
+    await checkErrors();
+  }
+  res.send('Error logged');  
+})
+
+
 async function logError(error) {
     const now = new Date();
     fs.appendFile("/tmp/test", `${error.someproperty},${now}${os.EOL}`, function(err) {
-        console.log("The error was saved!");
+        if (!err) console.log("The error was saved!");
     }); 
 }
 
 async function checkErrors() {
-    console.log('hi');
-    const errors = await readLastLines.read('/tmp/test', 10).then((lines) => lines.split('\n'));
-    if (errors.length == 11) { // we have ten items since there's an empty line added
-        const firstError = errors[0];
-        const lastError = errors[9];
-        var diff =(firstError.getTime() - lastError.getTime()) / 1000;
-        diff /= 60;
-        var diffMins = Math.abs(Math.round(diff));
-        console.log('hi', diffMins);
+    const errors = await readLastLines.read('/tmp/test', 10).then((lines) => lines.split('\n')); // we just read last ten items
+    if (errors.length == maxPossibleErrors + 1) { // we have ten items + one empty line
+        const first = new Date(errors[0]);
+        const last = new Date(errors[9]);
+        const seconds = Math.abs(first.getTime() - last.getTime()) / 1000;
+        console.log(`difference in seconds is ${seconds}, ${first.getTime()}, ${last.getTime()}`);
+        if (seconds <= 60) {
+          resetNotifier();
+          console.log('email sent!');
+        }
     }
+}
+
+async function resetNotifier() {
+  shouldNotify = false;
+  setTimeout(()=> { shouldNotify = true; console.log('hi time has passed!!')}, 60000);
 }
