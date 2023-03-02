@@ -29,12 +29,12 @@ app.post('/operation', async (req, res) => {
 
 // This is the function responsible for doing normal operations that we need to catch
 function coolOperation() {
-  throw new Error({ someproperty: 'this is an error property'})
+  throw new Error('this is simulating a property');
 }
 
 // This is the logger function responsible for appending errors
 async function logError(error) {
-    fs.appendFile("/tmp/test", `${error.someproperty},${new Date()}${os.EOL}`, function(err) {
+    fs.appendFile("/tmp/test", `${error.message},${new Date()}${os.EOL}`, function(err) {
         if (!err) console.log("The error was saved!");
     }); 
 }

@@ -39,3 +39,8 @@ and should be defined as the last middleware in the chain
 app.use(someMiddleware);
 app.use(someOtherMiddleware);
 app.use(emailHandler);
+
+
+
+To test this, `npm start`, then hit `POST http://localhost:3000/operation` ten times and
+you should see a test file in `tmp/test` folder with each error inside.
