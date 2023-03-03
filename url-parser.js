@@ -13,21 +13,20 @@ const rawReal = '/6/api/listings/3?sort=desc&limit=10';
 app.get('/parse', async (req, res) => {
   const model = rawModel.split('/');
   const real = rawReal.split('/');
-  const params = [];
+  const results = {};
 
-  const results = model.map((x, index) => {
-    if (x.includes(':')) { 
-      const newX = x.replace(':','');
+  model.forEach((x, index) => {
+    if (x.includes(':')) {
+      const key = x.replace(':','');
       const realEl = real[index];
       if (realEl.includes('?')) {
-        return getQueryParams(realEl);
-        //params.push(realEl.slice(realEl.indexOf('?') + 1).split('&'));
-      }
-      return {
-        [newX]: real[index]
+        Object.assign(results, getQueryParams(realEl));
+        results[key] = realEl.split('?')[0];
+      } else {
+        results[key] = realEl;
       }
     }
-  }).filter(n=>n);
+  });
 
   return res.send(results);
 })
