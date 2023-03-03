@@ -53,7 +53,7 @@ async function hasErrorOverflow() {
 
 
 async function notify() {
-  resetNotifier();        
+  await resetNotifier();        
   // here we should send an email, but since this is pseudo code we 
   // can think of next line as an email sender
 
