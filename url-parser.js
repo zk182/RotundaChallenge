@@ -8,22 +8,22 @@ app.listen(port, () => {
 })
 
 const rawModel = '/:version/api/:collection/:id';
-const rawReal = '/6/api/listings/3?sort=desc&limit=10';
+const rawInstance = '/6/api/listings/3?sort=desc&limit=10';
 
 app.get('/parse', async (req, res) => {
   const model = rawModel.split('/');
-  const real = rawReal.split('/');
+  const instance = rawInstance.split('/');
   const results = {};
 
   model.forEach((x, index) => {
     if (x.includes(':')) {
       const key = x.replace(':','');
-      const realEl = real[index];
+      const realEl = instance[index];
       if (realEl.includes('?')) {
         Object.assign(results, getQueryParams(realEl));
-        results[key] = realEl.split('?')[0];
+        results[key] = castToNumber(realEl.split('?')[0]);
       } else {
-        results[key] = realEl;
+        results[key] = castToNumber(realEl);
       }
     }
   });
@@ -36,7 +36,9 @@ function getQueryParams(url) {
   const params = {};
   paramArr.map(param => {
       const [key, val] = param.split('=');
-      params[key] = val;
+      params[key] = castToNumber(val);
   })
   return params;
 }
+
+castToNumber = (val) => isNaN(Number(val)) ? val : Number(val);
