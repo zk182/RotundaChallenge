@@ -1,4 +1,4 @@
-alarm.js is a prototype in pseudo code of the solution for the alarm problem
+`alarm.js` is a prototype in pseudo code of the solution for the alarm problem
 
 We defined an entry endpoint (POST /operation) which calls coolOperation.
 coolOperation is the function responsible for doing normal operations that we need to catch, 
@@ -36,10 +36,11 @@ function emailHandler(err, req, res, next) {
 
 and should be defined as the last middleware in the chain
 
-app.use(someMiddleware);
-app.use(someOtherMiddleware);
-app.use(emailHandler);
+`app.use(someMiddleware);`
 
+`app.use(someOtherMiddleware);`
+
+`app.use(emailHandler);`
 
 
 To test this, `npm start`, then hit `POST http://localhost:3000/operation` ten times and
