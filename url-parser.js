@@ -13,17 +13,17 @@ const rawInstance = '/6/api/listings/3?sort=desc&limit=10';
 app.get('/parse', async (req, res) => {
   const model = rawModel.split('/');
   const instance = rawInstance.split('/');
-  const results = {};
+  let results = {};
 
   model.forEach((x, index) => {
     if (x.includes(':')) {
       const key = x.replace(':','');
-      const realEl = instance[index];
-      if (realEl.includes('?')) {
-        Object.assign(results, getQueryParams(realEl));
-        results[key] = castToNumber(realEl.split('?')[0]);
+      const instanceElement = instance[index];
+      if (instanceElement.includes('?')) {
+        Object.assign(results, getQueryParams(instanceElement));
+        results[key] = castToNumber(instanceElement.split('?')[0]);
       } else {
-        results[key] = castToNumber(realEl);
+        results[key] = castToNumber(instanceElement);
       }
     }
   });
